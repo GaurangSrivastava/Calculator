@@ -1,118 +1,233 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import React, { useState } from 'react'; 
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'; 
+import CustomButton from './src/CustomButton';
+export default function App() { 
+  const [displayvalue, setdislpayvalue] = useState('0');
+  const [resultvalue, setresultvalue] = useState('0');
+  const [resultCalculated, setResultCalculated] = useState(false);
+const handleinput=(input:string)=>{
+  if(displayvalue==='0'){
+    setdislpayvalue(input);
+  }
+  else{
+    setdislpayvalue(displayvalue+input);
+  }
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+  if (input === '+/-') {
+    setdislpayvalue(displayvalue.startsWith('-') ? displayvalue.slice(1) : '-' + displayvalue);
+    return;
+  }
+  if (input === '.' && displayvalue.includes('.')) {
+    return;
+  }
+};
+const evalexp = () => {
+  try {
+    const result = eval(displayvalue);
+    setresultvalue(result.toString());
+    setResultCalculated(true);
+  } catch(error) {
+    console.log(error);
+  }
+};
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+const clearall = () => {
+  setdislpayvalue('0');
+  setresultvalue('0');
+  setResultCalculated(false);
+};
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
-
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+const backspace=()=>{
+  setdislpayvalue(displayvalue.slice(0, -1));
+  if (displayvalue.length === 1) {
+    setdislpayvalue('0');
+  }
   };
 
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
+return (
+  <View style={styles.container}>
+       <View style={styles.display}>
+        <Text style={[styles.text, styles.textRight, resultCalculated && styles.fade]}>{displayvalue}</Text>
+        {displayvalue !== '0' && (
+          <Text style={[styles.result, styles.textRight]}>{resultvalue}</Text>
+        )}
+      </View>
+    <View style={styles.keyboard}>
+    <View style={styles.rows}>
+      <CustomButton
+        text="AC"
+        textColor="#EB7610"
+        buttonColor="#2C2B2A"
+        onPress={() => clearall()}
       />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-}
+      <CustomButton
+        text="&#x232B;"
+        textColor="#EB7610"
+        buttonColor="#2C2B2A"
+        onPress={() => backspace()}
+      />
+      <CustomButton
+        text="%"
+        textColor="#EB7610"
+        buttonColor="#2C2B2A"
+        onPress={() => handleinput('%')}
+      />
+      <CustomButton
+        text="/"
+        textColor="#EB7610"
+        buttonColor="#2C2B2A"
+        onPress={() => handleinput('/')}
+      />
+    </View>
+    <View style={styles.rows}>
+      <CustomButton
+        text="7"
+        textColor="#fff"
+        buttonColor="#5A5554"
+        onPress={() => handleinput('7')}
+      />
+      <CustomButton
+        text="8"
+        textColor="#fff"
+        buttonColor="#5A5554"
+        onPress={() => handleinput('8')}
+      />
+      <CustomButton
+        text="9"
+        textColor="#fff"
+        buttonColor="#5A5554"
+        onPress={() => handleinput('9')}
+      />
+      <CustomButton
+        text="x"
+        textColor="#EB7610"
+        buttonColor="#2C2B2A"
+        onPress={() => handleinput('*')}
+      />
+    </View>
+    <View style={styles.rows}>
+      <CustomButton
+        text="4"
+        textColor="#fff"
+        buttonColor="#5A5554"
+        onPress={() => handleinput('4')}
+      />
+      <CustomButton
+        text="5"
+        textColor="#fff"
+        buttonColor="#5A5554"
+        onPress={() => handleinput('5')}
+      />
+      <CustomButton
+        text="6"
+        textColor="#fff"
+        buttonColor="#5A5554"
+        onPress={() => handleinput('6')}
+      />
+      <CustomButton
+        text="-"
+        textColor="#EB7610"
+        buttonColor="#2C2B2A"
+        onPress={() => handleinput('-')}
+      />
+    </View>
+    <View style={styles.rows}>
+      <CustomButton
+        text="1"
+        textColor="#fff"
+        buttonColor="#5A5554"
+        onPress={() => handleinput('1')}
+      />
+      <CustomButton
+        text="2"
+        textColor="#fff"
+        buttonColor="#5A5554"
+        onPress={() => handleinput('2')}
+      />
+      <CustomButton
+        text="3"
+        textColor="#fff"
+        buttonColor="#5A5554"
+        onPress={() => handleinput('3')}
+      />
+      <CustomButton
+        text="+"
+        textColor="#EB7610"
+        buttonColor="#2C2B2A"
+        onPress={() => handleinput('+')}
+      />
+    </View>
+      <View style={styles.rows}>
+      <CustomButton
+        text="&#177;"
+        textColor="#fff"
+        buttonColor="#5A5554"
+        onPress={() => handleinput('+/-')}
+      />
+      <CustomButton
+        text="0"
+        textColor="#fff"
+        buttonColor="#5A5554"
+        onPress={() => handleinput('0')}
+      />
+      <CustomButton
+        text="."
+        textColor="#fff"
+        buttonColor="#5A5554"
+        onPress={() => handleinput('.')}
+      />
+      <CustomButton
+        text="="
+        textColor="#fff"
+        buttonColor="#EB7610"
+        onPress={() => evalexp()}
+      />
+    </View>
+    </View>
+  </View>
+);
+} 
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
+  display: {
+    flex: 2,
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
+    padding: 20,
+    backgroundColor: '#000', 
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
+  keyboard: {
+    flex: 3,
+    backgroundColor: '#000',
+    width: '100%',
+    justifyContent: 'center',
+    borderTopWidth: 0.5,
+    borderTopColor: 'white'
   },
-  highlight: {
-    fontWeight: '700',
+  rows: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: 10,
+  },
+  text: {
+    fontSize: 36,
+    color: '#fff', // Default text color
+  },
+  textRight: {
+    textAlign: 'right',
+  },
+  result: {
+    fontSize: 36,
+    color: '#fff', // Normal result text color
+    textAlign: 'right',
+  },
+  fade: {
+    color: 'grey', // Change display text color when result calculated
   },
 });
-
-export default App;
