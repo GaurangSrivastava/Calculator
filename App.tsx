@@ -1,31 +1,93 @@
 import React, { useState } from 'react'; 
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'; 
+import { StyleSheet, Text, View } from 'react-native'; 
 import CustomButton from './src/CustomButton';
 export default function App() { 
-  const [displayvalue, setdislpayvalue] = useState('0');
+  const [displayvalue, setdisplayvalue] = useState('0');
   const [resultvalue, setresultvalue] = useState('0');
   const [resultCalculated, setResultCalculated] = useState(false);
+  const [repeatop,setrepeatop]=useState(false);
 const handleinput=(input:string)=>{
   if(displayvalue==='0'){
-    setdislpayvalue(input);
-  }
-  else{
-    setdislpayvalue(displayvalue+input);
+    if(input==='+'||input==='-'||input==='/'||input==='*'){
+      setdisplayvalue(displayvalue+input);
+    }
+    else if(input==='%'){
+      return;
+    }
+    else{
+    setdisplayvalue(input);
+    }
   }
 
   if (input === '+/-') {
-    setdislpayvalue(displayvalue.startsWith('-') ? displayvalue.slice(1) : '-' + displayvalue);
+    const lastOperatorIndex = Math.max(displayvalue.lastIndexOf('+'), displayvalue.lastIndexOf('-'), displayvalue.lastIndexOf('*'), displayvalue.lastIndexOf('/'));
+    const lastNumber = displayvalue.substring(lastOperatorIndex + 1);
+    const updatedNumber = lastNumber.startsWith('-') ? lastNumber.slice(1) : '-' + lastNumber;
+    setdisplayvalue(displayvalue.slice(0, lastOperatorIndex + 1) + updatedNumber);
     return;
   }
-  if (input === '.' && displayvalue.includes('.')) {
+
+
+  if (input === '.' ) {
+    const lastOperatorIndex = Math.max(displayvalue.lastIndexOf('+'), displayvalue.lastIndexOf('-'), displayvalue.lastIndexOf('*'), displayvalue.lastIndexOf('/'));
+    if (!displayvalue.substring(lastOperatorIndex + 1).includes('.')) {
+      setdisplayvalue(displayvalue + '.');
+    }
     return;
   }
+  if(input==='%'){
+    if(repeatop===true){
+      return;
+    }
+    else{
+      let percentageValue;
+      if (displayvalue.includes('+') || displayvalue.includes('-') || displayvalue.includes('*') || displayvalue.includes('/')) {
+      const numbers = displayvalue.split(/[-+*/]/);
+      const lastNumber = numbers[numbers.length - 1];
+      percentageValue = parseFloat(lastNumber) / 100;
+      const updatedExpression = displayvalue.slice(0, -lastNumber.length) + percentageValue;
+      setdisplayvalue(updatedExpression);
+    } else {
+      percentageValue = parseFloat(displayvalue) / 100;
+      setdisplayvalue(percentageValue.toString());
+    }
+    }
+  }
+
+  if(input==='+'||input==='-'||input==='/'||input==='*')
+    {
+      if(repeatop===false){
+      setdisplayvalue(displayvalue+input);
+      setrepeatop(true);
+      }
+      else{
+        const updatedDisplay = displayvalue.substring(0, displayvalue.length - 1) + input;
+        setdisplayvalue(updatedDisplay);
+      }
+    }
+    
+  else if(displayvalue!=='0'&&input!=='%')
+  {
+    if(repeatop===true){
+      setrepeatop(false);
+    }
+      setdisplayvalue(displayvalue+input);
+    }
 };
 const evalexp = () => {
   try {
-    const result = eval(displayvalue);
+    if(resultCalculated===false){
+    let expression = displayvalue;
+    if ('+-*/'.includes(expression[expression.length - 1])) {
+      expression = expression.slice(0, -1);
+    }
+    const result = eval(expression);
     setresultvalue(result.toString());
     setResultCalculated(true);
+  }
+  else{
+    setdisplayvalue(resultvalue);
+  }
   } catch(error) {
     console.log(error);
   }
@@ -33,15 +95,19 @@ const evalexp = () => {
 
 
 const clearall = () => {
-  setdislpayvalue('0');
+  setdisplayvalue('0');
   setresultvalue('0');
   setResultCalculated(false);
+  setrepeatop(false);
 };
 
 const backspace=()=>{
-  setdislpayvalue(displayvalue.slice(0, -1));
+  if(repeatop===true){
+    setrepeatop(false);
+  }
+  setdisplayvalue(displayvalue.slice(0, -1));
   if (displayvalue.length === 1) {
-    setdislpayvalue('0');
+    setdisplayvalue('0');
   }
   };
 
@@ -100,7 +166,7 @@ return (
         onPress={() => handleinput('9')}
       />
       <CustomButton
-        text="x"
+        text="&#xd7;"
         textColor="#EB7610"
         buttonColor="#2C2B2A"
         onPress={() => handleinput('*')}
