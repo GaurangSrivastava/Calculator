@@ -16,14 +16,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 40,
-    width: 60,
+    width: 75,
     height: 60,
     paddingBottom:1.5,
     paddingRight:1
 
   },
   buttonText: {
-    fontSize: 25,
+    fontSize: 26,
     fontWeight:400,
   },
 });
