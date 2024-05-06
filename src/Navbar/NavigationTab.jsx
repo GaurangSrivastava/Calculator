@@ -1,14 +1,16 @@
 import {View, TouchableOpacity,Text,Switch } from 'react-native';
 import { useContext} from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faCalculator, faScaleBalanced, faTemperatureLow } from '@fortawesome/free-solid-svg-icons';
-import { ColorContext } from '../Context/ColorContext';
+import {faUser, faCalculator, faScaleBalanced, faTemperatureLow } from '@fortawesome/free-solid-svg-icons';
+import { ColorContext } from '../Contexts/ColorContext';
 export const MyTabBar = ({ state, navigation }) => {
   const ColorContextValue=useContext(ColorContext);
   const {DarkMode, setDarkMode} = ColorContextValue;
   const toggleSwitch = () => setDarkMode(previousState => !previousState);
   const getIcon = (routeName) => {
     switch (routeName) {
+      case'SignUp':
+       return faUser;
       case 'Calculator':
         return faCalculator;
       case 'Weight Converter':
@@ -40,6 +42,7 @@ export const MyTabBar = ({ state, navigation }) => {
           
           return (
             <TouchableOpacity
+              key={route.key}
               onPress={onPress}
               style={{paddingTop:14, alignItems:'center'}}
             >

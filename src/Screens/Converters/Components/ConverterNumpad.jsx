@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 
-export default function ConverterCustomButton({ text, textColor, buttonColor, onPress }) {
+export default function ConveterNumpad({ text, textColor, buttonColor, onPress }) {
   return (
     <TouchableOpacity
       style={[styles.button, { backgroundColor: buttonColor }]}
@@ -16,14 +16,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 40,
-    width: 150,
+    width: 75,
     height: 60,
     paddingBottom:1.5,
     paddingRight:1
 
   },
   buttonText: {
-    fontSize: 25,
-    fontWeight:400,
+    fontSize: 26,
+    fontWeight:600,
   },
 });

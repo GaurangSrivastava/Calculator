@@ -1,14 +1,17 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import NavBar from './src/Navbar/Navbar';
-import ColorContextProvider from './src/Context/ColorContext';
+import NavBar from './src/Navbar/Navigations';
+import MyStack from './src/Navbar/Stack';
+import ColorContextProvider from './src/Contexts/ColorContext';
+import { OrientationProvider } from './src/Contexts/OrientationContext';
 export default function App() {
   return (
+    <OrientationProvider>
     <ColorContextProvider>
     <NavigationContainer>
-      <NavBar/>
+      <MyStack/>
     </NavigationContainer>
     </ColorContextProvider>
+    </OrientationProvider>
   );
 }
